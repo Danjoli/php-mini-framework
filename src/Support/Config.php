@@ -9,14 +9,12 @@ use RuntimeException;
 final class Config
 {
     /** @param array<string, mixed> $items */
-    public function __construct(private readonly array $items)
-    {
-    }
+    public function __construct(private readonly array $items) {}
 
     public static function fromDirectory(string $directory): self
     {
         $items = [];
-        foreach (glob(rtrim($directory, '/\\').'/*.php') ?: [] as $file) {
+        foreach (glob(rtrim($directory, '/\\') . '/*.php') ?: [] as $file) {
             $value = require $file;
             if (!is_array($value)) {
                 throw new RuntimeException("Configuration file must return an array: {$file}");
