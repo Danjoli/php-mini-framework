@@ -1,0 +1,52 @@
+{
+  "name": "danjoli/php-mini-framework",
+  "description": "Educational MVC framework built from scratch with PHP, Composer, PSR standards and PDO.",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "psr/container": "^2.0",
+    "psr/http-message": "^2.0",
+    "psr/http-server-handler": "^1.0",
+    "psr/http-server-middleware": "^1.0",
+    "psr/log": "^3.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.88",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^11.5 || ^12.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mini\\": "src/",
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "check": [
+      "@test",
+      "@analyse",
+      "@style"
+    ],
+    "test": "phpunit",
+    "test:coverage": "phpunit --coverage-text --coverage-clover=coverage/clover.xml",
+    "analyse": "phpstan analyse --memory-limit=512M",
+    "style": "php-cs-fixer fix --dry-run --diff",
+    "style:fix": "php-cs-fixer fix",
+    "serve": "php -S localhost:8080 -t public"
+  },
+  "config": {
+    "allow-plugins": false,
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
