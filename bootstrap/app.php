@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 use Mini\Application;
 use Mini\Container\Container;
+use Mini\Http\Middleware\CorsMiddleware;
+use Mini\Http\Middleware\ErrorHandlerMiddleware;
+use Mini\Http\Middleware\JsonBodyMiddleware;
+use Mini\Http\Middleware\RequestIdMiddleware;
+use Mini\Http\MiddlewareDispatcher;
 use Mini\Routing\Router;
 use Mini\Support\Config;
 use Mini\Support\Env;
@@ -19,4 +24,11 @@ $container->instance(Router::class, $router);
 
 require dirname(__DIR__).'/routes/web.php';
 
-return new Application($container, $router);
+$application = new Application($container, $router);
+
+return new MiddlewareDispatcher([
+    new ErrorHandlerMiddleware((bool) $container->get(Config::class)->get('app.debug', false)),
+    new RequestIdMiddleware(),
+    new CorsMiddleware(),
+    new JsonBodyMiddleware(),
+], $application);
