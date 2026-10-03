@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Mini\Database\Database;
+use Mini\Database\MigrationRunner;
+use Mini\Support\Config;
+use Mini\Support\Env;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+Env::load(dirname(__DIR__).'/.env');
+$config = Config::fromDirectory(dirname(__DIR__).'/config');
+$database = new Database((string) $config->get('database.dsn'), $config->get('database.username'), $config->get('database.password'));
+$command = $argv[1] ?? 'help';
+if ($command === 'migrate') { $count = (new MigrationRunner($database))->migrate(dirname(__DIR__).'/database/migrations'); echo "Applied {$count} migration(s).".PHP_EOL; exit(0); }
+echo "Mini Framework PHP\n\nAvailable commands:\n  migrate  Apply pending database migrations\n";
