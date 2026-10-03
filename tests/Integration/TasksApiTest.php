@@ -54,6 +54,6 @@ final class TasksApiTest extends TestCase
     {
         $headers = $body === null ? [] : ['Content-Type' => 'application/json'];
         $stream = Stream::fromString($body === null ? '' : json_encode($body, JSON_THROW_ON_ERROR));
-        return $this->application->handle(new ServerRequest($method, Uri::fromString('http://localhost'.$path), $headers, $stream));
+        return $this->application->handle(new ServerRequest($method, Uri::fromString('http://localhost' . $path), $headers, $stream));
     }
 }

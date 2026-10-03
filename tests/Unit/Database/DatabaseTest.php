@@ -26,7 +26,13 @@ final class DatabaseTest extends TestCase
     {
         $database = new Database('sqlite::memory:');
         $database->pdo()->exec('CREATE TABLE records (id INTEGER PRIMARY KEY)');
-        try { $database->transaction(function (Database $database): void { $database->table('records')->insert(['id' => 1]); throw new \RuntimeException('fail'); }); } catch (\RuntimeException) {}
+        try {
+            $database->transaction(function (Database $database): void {
+                $database->table('records')->insert(['id' => 1]);
+                throw new \RuntimeException('fail');
+            });
+        } catch (\RuntimeException) {
+        }
         self::assertSame([], $database->table('records')->get());
     }
 }

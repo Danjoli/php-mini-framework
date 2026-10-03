@@ -22,7 +22,13 @@ final class MiddlewareTest extends TestCase
 {
     public function testPipelineRunsInOrderAndParsesJson(): void
     {
-        $fallback = new class implements RequestHandlerInterface { public function handle(ServerRequestInterface $request): ResponseInterface { $body = $request->getParsedBody(); return Response::json(['name' => is_array($body) ? ($body['name'] ?? null) : null]); } };
+        $fallback = new class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                $body = $request->getParsedBody();
+                return Response::json(['name' => is_array($body) ? ($body['name'] ?? null) : null]);
+            }
+        };
         $pipeline = new MiddlewareDispatcher([new ErrorHandlerMiddleware(), new RequestIdMiddleware(), new JsonBodyMiddleware()], $fallback);
         $request = (new ServerRequest('POST', Uri::fromString('http://localhost/tasks'), ['Content-Type' => 'application/json'], Stream::fromString('{"name":"Mini"}')))->withHeader('X-Request-ID', 'test-id');
         $response = $pipeline->handle($request);
@@ -32,7 +38,12 @@ final class MiddlewareTest extends TestCase
 
     public function testErrorHandlerConvertsExceptionsToJson(): void
     {
-        $fallback = new class implements RequestHandlerInterface { public function handle(ServerRequestInterface $request): ResponseInterface { throw new NotFoundHttpException('Missing task.'); } };
+        $fallback = new class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                throw new NotFoundHttpException('Missing task.');
+            }
+        };
         $response = (new MiddlewareDispatcher([new ErrorHandlerMiddleware()], $fallback))->handle(new ServerRequest('GET', Uri::fromString('http://localhost/missing')));
         self::assertSame(404, $response->getStatusCode());
         self::assertStringContainsString('Missing task.', (string) $response->getBody());

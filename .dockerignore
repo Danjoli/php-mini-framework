@@ -1,0 +1,9 @@
+.git
+.github
+.env
+.phpunit.cache
+.phpstan.cache
+coverage
+storage/*.sqlite
+tests
+vendor
