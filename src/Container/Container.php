@@ -70,7 +70,7 @@ final class Container implements ContainerInterface
         }
 
         if (in_array($id, $this->resolving, true)) {
-            throw new ContainerException('Circular dependency detected: '.implode(' -> ', [...$this->resolving, $id]));
+            throw new ContainerException('Circular dependency detected: ' . implode(' -> ', [...$this->resolving, $id]));
         }
 
         $this->resolving[] = $id;

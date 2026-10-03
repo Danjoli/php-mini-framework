@@ -20,10 +20,14 @@ final class Validator
                 $name = $parts[0];
                 $parameter = $parts[1] ?? null;
                 $message = $this->check($name, $parameter, $field, $value, $data);
-                if ($message !== null) { $errors[$field][] = $message; }
+                if ($message !== null) {
+                    $errors[$field][] = $message;
+                }
             }
         }
-        if ($errors !== []) { throw new ValidationException($errors); }
+        if ($errors !== []) {
+            throw new ValidationException($errors);
+        }
         return array_intersect_key($data, $rules);
     }
 
@@ -31,7 +35,9 @@ final class Validator
     private function check(string $rule, ?string $parameter, string $field, mixed $value, array $data): ?string
     {
         $empty = $value === null || $value === '';
-        if ($rule !== 'required' && $empty) { return null; }
+        if ($rule !== 'required' && $empty) {
+            return null;
+        }
         $valid = match ($rule) {
             'required' => !$empty,
             'string' => is_string($value),
@@ -41,7 +47,7 @@ final class Validator
             'min' => is_string($value) && mb_strlen($value) >= (int) $parameter,
             'max' => is_string($value) && mb_strlen($value) <= (int) $parameter,
             'in' => in_array($value, explode(',', (string) $parameter), true),
-            'confirmed' => $value === ($data[$field.'_confirmation'] ?? null),
+            'confirmed' => $value === ($data[$field . '_confirmation'] ?? null),
             default => throw new \InvalidArgumentException("Unknown validation rule: {$rule}"),
         };
         return $valid ? null : "The {$field} field failed the {$rule} rule.";

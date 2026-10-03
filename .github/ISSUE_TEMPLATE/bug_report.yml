@@ -1,0 +1,19 @@
+name: Bug report
+description: Relate um comportamento incorreto reproduzível
+title: "fix: "
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição
+      description: O que aconteceu e o que era esperado?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Como reproduzir
+      description: Inclua um exemplo mínimo e as versões de PHP e sistema operacional.
+    validations:
+      required: true

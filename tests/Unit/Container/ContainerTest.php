@@ -15,7 +15,7 @@ final class ContainerTest extends TestCase
     public function testItResolvesBindingsAndAutowiresDependencies(): void
     {
         $container = new Container();
-        $container->bind(Greeting::class, fn (): Greeting => new Greeting('Hello'));
+        $container->bind(Greeting::class, fn(): Greeting => new Greeting('Hello'));
 
         $service = $container->get(Greeter::class);
 
@@ -41,8 +41,8 @@ final class ContainerTest extends TestCase
     public function testItDetectsCircularDependencies(): void
     {
         $container = new Container();
-        $container->bind('a', fn (Container $container): mixed => $container->get('b'));
-        $container->bind('b', fn (Container $container): mixed => $container->get('a'));
+        $container->bind('a', fn(Container $container): mixed => $container->get('b'));
+        $container->bind('b', fn(Container $container): mixed => $container->get('a'));
 
         $this->expectException(ContainerException::class);
         $container->get('a');
@@ -51,7 +51,7 @@ final class ContainerTest extends TestCase
     public function testItInjectsCallableArguments(): void
     {
         $result = (new Container())->call(
-            static fn (stdClass $service, string $name): string => $name.' '.get_class($service),
+            static fn(stdClass $service, string $name): string => $name . ' ' . get_class($service),
             ['name' => 'uses'],
         );
 
@@ -75,6 +75,6 @@ final class Greeter
 
     public function greet(string $name): string
     {
-        return $this->greeting->message().' '.$name;
+        return $this->greeting->message() . ' ' . $name;
     }
 }
