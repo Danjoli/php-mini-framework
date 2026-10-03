@@ -6,6 +6,7 @@ namespace Mini\Http\Middleware;
 
 use Mini\Exception\HttpException;
 use Mini\Http\Response;
+use Mini\Validation\ValidationException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,7 +22,9 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
             $status = $exception instanceof HttpException ? $exception->statusCode : 500;
             $message = $exception instanceof HttpException || $this->debug ? $exception->getMessage() : 'Internal server error.';
             $headers = $exception instanceof HttpException ? $exception->headers : [];
-            return Response::json(['error' => ['status' => $status, 'message' => $message, 'request_id' => $request->getAttribute('request_id')]], $status, $headers);
+            $error = ['status' => $status, 'message' => $message, 'request_id' => $request->getAttribute('request_id')];
+            if ($exception instanceof ValidationException) { $error['details'] = $exception->errors; }
+            return Response::json(['error' => $error], $status, $headers);
         }
     }
 }
